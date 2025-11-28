@@ -41,7 +41,13 @@ def _get_cleaned_production_time(df):
             df["Verzinken (=Produzent 2)"].fillna(0)
     )
 
-    # Delete unecassary cols
+    ## Add the complete duration
+    df[DURATION_COL_NAME] = (
+            df[DURATION_PRODUCER_COL_NAME].fillna(0) +
+            df[DURATION_COATING_COL_NAME].fillna(0)
+    )
+
+    ## Delete unecassary cols
     cols_to_delete = prod_cols
     cols_to_delete.extend([
         "producer_col",
@@ -56,7 +62,13 @@ def _get_cleaned_production_time(df):
 
     return df
 
-def get_article_production_duration_df(xlsx_file_path: str) -> pd.DataFrame:
+def get_article_production_duration_df() -> pd.DataFrame:
+    import os
+    current_file = os.path.abspath(__file__)
+    current_dir = os.path.dirname(current_file)
+
+    xlsx_file_path = f"{current_dir}/../../files/Produktionszeit_Warenfluss_Hackathon_Teilnehmer.xlsx"
+
     all_articles = pd.DataFrame()
     for sheet in [0, 2, 4]:
         df = pd.read_excel(xlsx_file_path, sheet_name=sheet)
@@ -78,12 +90,6 @@ def get_article_production_duration_df(xlsx_file_path: str) -> pd.DataFrame:
     return all_articles
 
 if __name__ == "__main__":
-    import os
-    current_file = os.path.abspath(__file__)
-    current_dir = os.path.dirname(current_file)
-
-    file_path = f"{current_dir}/../../files/Produktionszeit_Warenfluss_Hackathon_Teilnehmer.xlsx"
-
-    all_articles = get_article_production_duration_df(file_path)
+    all_articles = get_article_production_duration_df()
 
     print(all_articles)
