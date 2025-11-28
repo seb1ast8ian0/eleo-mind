@@ -8,5 +8,7 @@ def get_stock_df() -> pd.DataFrame:
 
     all_products["amount"] = int(0)
 
+    all_products["min_amount"] = int(5)
+
     return all_products
 
