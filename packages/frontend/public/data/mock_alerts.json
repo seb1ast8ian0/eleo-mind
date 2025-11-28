@@ -7,12 +7,12 @@
     "image_alt": "Produktbild: Hoftor Doppelflügel",
     "stock_current": 2,
     "unit": "Stück",
-    "delivery_time_days": 16,
+    "delivery_time_days": 30,
     "producer_id": 4,
     "division_id": 3,
     "recommended_order_quantity": 8,
-    "recommended_order_date": "2025-11-16",
-    "critical_date_min_stock_breach": "2025-12-02"
+    "recommended_order_date": "2025-11-20",
+    "critical_date_min_stock_breach": "2025-11-24"
   },
   {
     "article_id": "ART-003",
