@@ -12,7 +12,7 @@ interface StockChartProps {
   deliveryTimeDays: number
   forecast: {
     date: string
-    amount: number
+    stock: number
   }[]
 }
 
@@ -33,9 +33,6 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
            <div className="w-2 h-2 rounded-full bg-[#9eb782]"></div>
            <p className="text-sm font-medium">Bestand: {Math.round(dataPoint.stock)}</p>
         </div>
-        <p className="text-xs text-gray-500 mt-1">
-           Prognose: -{dataPoint.forecastAmount}
-        </p>
       </div>
     )
   }
@@ -43,46 +40,17 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
 }
 
 export function StockChart({ currentStock, minStock, deliveryTimeDays, forecast }: StockChartProps) {
-  // 1. Calculate stock depletion over time
-  let runningStock = currentStock
-  const stockData = forecast.map((day) => {
-    const stock = runningStock
-    // eslint-disable-next-line react-hooks/immutability
-    runningStock -= Math.ceil(day.amount / 50)
-    return {
-      date: day.date,
-      stock: stock,
-      forecastAmount: day.amount,
-    }
-  })
+  const chartData = forecast.map((p) => ({ date: p.date, stock: p.stock }))
 
-  // 2. Find intersection point (Stock <= MinStock)
-  const intersectionIndex = stockData.findIndex((d) => d.stock <= minStock)
-  
-  // 3. Show full range
-  const chartData = stockData
+  const intersectionIndex = chartData.findIndex((d) => d.stock <= minStock)
 
-  // 4. Determine Danger Zone
-  // Danger Zone Start = Intersection Date - Delivery Time
-  // Danger Zone End = Intersection Date
-  let dangerZone = null
+  let dangerZone: { x1: string; x2: string } | null = null
   if (intersectionIndex !== -1) {
-    const intersectionDate = parseISO(stockData[intersectionIndex].date)
+    const intersectionDate = parseISO(chartData[intersectionIndex].date)
     const dangerStartDate = addDays(intersectionDate, -deliveryTimeDays)
     dangerZone = {
       x1: format(dangerStartDate, "yyyy-MM-dd"),
-      x2: stockData[intersectionIndex].date
-    }
-  } else if (stockData.length) {
-    const lastDate = parseISO(stockData[stockData.length - 1].date)
-    const remainingStock = runningStock
-    const avgConsumption = Math.max(1, Math.round((forecast.reduce((s, d) => s + Math.ceil(d.amount / 50), 0)) / forecast.length))
-    const daysToIntersection = Math.max(0, Math.ceil((remainingStock - minStock) / avgConsumption))
-    const intersectionDate = addDays(lastDate, daysToIntersection)
-    const dangerStartDate = addDays(intersectionDate, -deliveryTimeDays)
-    dangerZone = {
-      x1: format(dangerStartDate, "yyyy-MM-dd"),
-      x2: format(intersectionDate, "yyyy-MM-dd")
+      x2: chartData[intersectionIndex].date,
     }
   }
 

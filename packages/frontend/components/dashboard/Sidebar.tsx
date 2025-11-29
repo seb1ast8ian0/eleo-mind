@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { useEffect, useState } from "react"
-import { Package, Settings, LogOut, Ship, AlertTriangle, Gauge, ChevronDown, Check } from "lucide-react"
+import { Package, Settings, Ship, AlertTriangle, Gauge, ChevronDown, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { usePathname } from "next/navigation"
 

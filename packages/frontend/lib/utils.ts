@@ -86,8 +86,22 @@ const ARTICLE_CATALOG: ArticleInfo[] = [
   },
 ]
 
+function normalizeId(id: string): string {
+  const s = id.toUpperCase().replace(/\s+/g, "")
+  const stripped = s.replace(/(UB|FZ|SF)$/i, "")
+  const prefixMatch = stripped.match(/^[A-Z]+/)
+  const prefix = prefixMatch ? prefixMatch[0] : ""
+  const digitsMatch = stripped.match(/\d+/)
+  const digits = digitsMatch ? digitsMatch[0] : ""
+  if (digits) {
+    const d = digits.slice(0, Math.min(4, digits.length))
+    return `${prefix}${d}`
+  }
+  return stripped.slice(0, 4)
+}
+
 function hashToIndex(s: string): number {
-  const key = s.slice(0, 6).toLowerCase()
+  const key = normalizeId(s)
   let h = 2166136261 >>> 0
   for (let i = 0; i < key.length; i++) {
     h ^= key.charCodeAt(i)

@@ -1,0 +1,658 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "FastAPI",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/article": {
+            "get": {
+                "summary": "Get Articles",
+                "description": "Gets all articles",
+                "operationId": "get_articles",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ArticlesResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/order_alerts": {
+            "post": {
+                "summary": "Get Order Prediction",
+                "operationId": "get_order_alerts",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OrderPredictionRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrderAlertsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/forecast": {
+            "post": {
+                "summary": "Get Forecast For Article",
+                "description": "Gets the forecast for a specific article",
+                "operationId": "get_forecast_for_article",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OrderAlertForArticleRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrderAlertForArticleResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/alerts": {
+            "post": {
+                "summary": "Get Critical Alerts",
+                "description": "Gets the most critical alerts",
+                "operationId": "get_alerts",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/GetOrderAlertsRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrderAlertsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/global-forecast": {
+            "get": {
+                "summary": "Get Global Forecast",
+                "operationId": "get_global_forecast",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GlobalForecastResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ArticleResponse": {
+                "properties": {
+                    "article_id": {
+                        "type": "string",
+                        "title": "Article Id"
+                    },
+                    "article_name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Article Name"
+                    },
+                    "coating": {
+                        "type": "string",
+                        "title": "Coating"
+                    },
+                    "category": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Category"
+                    },
+                    "image_path": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Image Path"
+                    },
+                    "image_alt": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Image Alt"
+                    },
+                    "stock_current": {
+                        "type": "integer",
+                        "title": "Stock Current",
+                        "default": 13
+                    },
+                    "unit": {
+                        "type": "string",
+                        "title": "Unit",
+                        "default": "Stück"
+                    },
+                    "delivery_time_days": {
+                        "type": "integer",
+                        "title": "Delivery Time Days"
+                    },
+                    "producer_id": {
+                        "type": "integer",
+                        "title": "Producer Id"
+                    },
+                    "division_id": {
+                        "type": "integer",
+                        "title": "Division Id"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "article_id",
+                    "coating",
+                    "delivery_time_days",
+                    "producer_id",
+                    "division_id"
+                ],
+                "title": "ArticleResponse"
+            },
+            "ArticlesResponse": {
+                "properties": {
+                    "articles": {
+                        "items": {
+                            "$ref": "#/components/schemas/ArticleResponse"
+                        },
+                        "type": "array",
+                        "title": "Articles"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "articles"
+                ],
+                "title": "ArticlesResponse"
+            },
+            "ForecastResponse": {
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Date"
+                    },
+                    "stock_forecast_for_date": {
+                        "type": "integer",
+                        "title": "Stock Forecast For Date"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "date",
+                    "stock_forecast_for_date"
+                ],
+                "title": "ForecastResponse"
+            },
+            "GetOrderAlertsRequest": {
+                "properties": {
+                    "global_current_stock": {
+                        "type": "integer",
+                        "title": "Global Current Stock"
+                    },
+                    "global_min_stock": {
+                        "type": "integer",
+                        "title": "Global Min Stock"
+                    },
+                    "amount_of_alerts": {
+                        "type": "integer",
+                        "title": "Amount Of Alerts",
+                        "default": 3
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "global_current_stock",
+                    "global_min_stock"
+                ],
+                "title": "GetOrderAlertsRequest"
+            },
+            "GlobalForecast": {
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Date"
+                    },
+                    "amount": {
+                        "type": "integer",
+                        "title": "Amount"
+                    },
+                    "weather_condition": {
+                        "type": "string",
+                        "title": "Weather Condition"
+                    },
+                    "weather_temperature": {
+                        "type": "integer",
+                        "title": "Weather Temperature"
+                    },
+                    "is_sale": {
+                        "type": "boolean",
+                        "title": "Is Sale"
+                    },
+                    "sale_type": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Sale Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "date",
+                    "amount",
+                    "weather_condition",
+                    "weather_temperature",
+                    "is_sale",
+                    "sale_type"
+                ],
+                "title": "GlobalForecast"
+            },
+            "GlobalForecastResponse": {
+                "properties": {
+                    "sales_forecast": {
+                        "type": "integer",
+                        "title": "Sales Forecast"
+                    },
+                    "sales_last_month": {
+                        "type": "integer",
+                        "title": "Sales Last Month"
+                    },
+                    "forecast": {
+                        "items": {
+                            "$ref": "#/components/schemas/GlobalForecast"
+                        },
+                        "type": "array",
+                        "title": "Forecast"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "sales_forecast",
+                    "sales_last_month",
+                    "forecast"
+                ],
+                "title": "GlobalForecastResponse"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "OrderAlertForArticleRequest": {
+                "properties": {
+                    "article_id": {
+                        "type": "string",
+                        "title": "Article Id"
+                    },
+                    "current_stock_for_article": {
+                        "type": "integer",
+                        "title": "Current Stock For Article"
+                    },
+                    "min_stock_for_article": {
+                        "type": "integer",
+                        "title": "Min Stock For Article"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "article_id",
+                    "current_stock_for_article",
+                    "min_stock_for_article"
+                ],
+                "title": "OrderAlertForArticleRequest"
+            },
+            "OrderAlertForArticleResponse": {
+                "properties": {
+                    "article_id": {
+                        "type": "string",
+                        "title": "Article Id"
+                    },
+                    "coating": {
+                        "type": "string",
+                        "title": "Coating"
+                    },
+                    "producer_id": {
+                        "type": "integer",
+                        "title": "Producer Id"
+                    },
+                    "division_id": {
+                        "type": "integer",
+                        "title": "Division Id"
+                    },
+                    "delivery_time_days": {
+                        "type": "integer",
+                        "title": "Delivery Time Days"
+                    },
+                    "stock_current": {
+                        "type": "integer",
+                        "title": "Stock Current"
+                    },
+                    "unit": {
+                        "type": "string",
+                        "title": "Unit",
+                        "default": "Stück"
+                    },
+                    "recommended_order_date": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Recommended Order Date"
+                    },
+                    "recommended_order_quantity": {
+                        "type": "integer",
+                        "title": "Recommended Order Quantity"
+                    },
+                    "critical_date_min_stock_breach": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Critical Date Min Stock Breach"
+                    },
+                    "forecast": {
+                        "items": {
+                            "$ref": "#/components/schemas/ForecastResponse"
+                        },
+                        "type": "array",
+                        "title": "Forecast"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "article_id",
+                    "coating",
+                    "producer_id",
+                    "division_id",
+                    "delivery_time_days",
+                    "stock_current",
+                    "recommended_order_date",
+                    "recommended_order_quantity",
+                    "critical_date_min_stock_breach",
+                    "forecast"
+                ],
+                "title": "OrderAlertForArticleResponse"
+            },
+            "OrderAlertsResponse": {
+                "properties": {
+                    "alerts": {
+                        "items": {
+                            "$ref": "#/components/schemas/OrderPredictionResponse"
+                        },
+                        "type": "array",
+                        "title": "Alerts"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "alerts"
+                ],
+                "title": "OrderAlertsResponse"
+            },
+            "OrderPredictionRequest": {
+                "properties": {
+                    "global_current_stock": {
+                        "type": "integer",
+                        "title": "Global Current Stock"
+                    },
+                    "global_min_stock": {
+                        "type": "integer",
+                        "title": "Global Min Stock"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "global_current_stock",
+                    "global_min_stock"
+                ],
+                "title": "OrderPredictionRequest"
+            },
+            "OrderPredictionResponse": {
+                "properties": {
+                    "article_id": {
+                        "type": "string",
+                        "title": "Article Id"
+                    },
+                    "coating": {
+                        "type": "string",
+                        "title": "Coating"
+                    },
+                    "article_name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Article Name"
+                    },
+                    "category": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Category"
+                    },
+                    "image_path": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Image Path"
+                    },
+                    "image_alt": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Image Alt"
+                    },
+                    "stock_current": {
+                        "type": "integer",
+                        "title": "Stock Current"
+                    },
+                    "unit": {
+                        "type": "string",
+                        "title": "Unit",
+                        "default": "Stück"
+                    },
+                    "delivery_time_in_days": {
+                        "type": "integer",
+                        "title": "Delivery Time In Days"
+                    },
+                    "producer_id": {
+                        "type": "integer",
+                        "title": "Producer Id"
+                    },
+                    "division_id": {
+                        "type": "integer",
+                        "title": "Division Id"
+                    },
+                    "recommended_order_quantity": {
+                        "type": "integer",
+                        "title": "Recommended Order Quantity"
+                    },
+                    "recommended_order_date": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Recommended Order Date"
+                    },
+                    "critical_date_min_stock_breach": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Critical Date Min Stock Breach"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "article_id",
+                    "coating",
+                    "stock_current",
+                    "delivery_time_in_days",
+                    "producer_id",
+                    "division_id",
+                    "recommended_order_quantity",
+                    "recommended_order_date",
+                    "critical_date_min_stock_breach"
+                ],
+                "title": "OrderPredictionResponse"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        }
+    }
+}

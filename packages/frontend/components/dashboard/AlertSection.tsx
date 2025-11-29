@@ -1,6 +1,7 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -23,9 +24,10 @@ interface AlertSectionProps {
   alerts: Alert[]
   onOpenDetails?: (alert: Alert) => void
   limit?: number
+  showHeaderLink?: boolean
 }
 
-export function AlertSection({ alerts, onOpenDetails, limit }: AlertSectionProps) {
+export function AlertSection({ alerts, onOpenDetails, limit, showHeaderLink }: AlertSectionProps) {
   const router = useRouter()
   const getCategoryIcon = (name: string) => {
     const k = name.toLowerCase()
@@ -45,9 +47,9 @@ export function AlertSection({ alerts, onOpenDetails, limit }: AlertSectionProps
     .slice(0, limit ?? alerts.length)
 
   const getSeverity = (alert: Alert) => {
-    const daysToBreach = differenceInDays(parseISO(alert.critical_date_min_stock_breach), new Date())
-    if (daysToBreach <= 0) return { label: "Kritisch", badgeClass: "bg-red-50 text-red-700 border border-red-200", barClass: "bg-black/80", valueClass: "text-red-600" }
-    if (daysToBreach <= alert.delivery_time_days) return { label: "Bald fällig", badgeClass: "bg-white text-[#1f1c17] border border-gray-200", barClass: "bg-black/80", valueClass: "text-[#1f1c17]" }
+    const daysToOrder = differenceInDays(parseISO(alert.recommended_order_date), new Date())
+    if (daysToOrder <= 1) return { label: "Kritisch", badgeClass: "bg-red-50 text-red-700 border border-red-200", barClass: "bg-black/80", valueClass: "text-red-600" }
+    if (daysToOrder > 1 && daysToOrder <= 5) return { label: "Bald fällig", badgeClass: "bg-white text-[#1f1c17] border border-gray-200", barClass: "bg-black/80", valueClass: "text-[#1f1c17]" }
     return { label: "Beobachten", badgeClass: "bg-white text-[#1f1c17] border border-gray-200", barClass: "bg-black/80", valueClass: "text-[#1f1c17]" }
   }
 
@@ -79,18 +81,24 @@ export function AlertSection({ alerts, onOpenDetails, limit }: AlertSectionProps
   return (
     <Card className="border-none shadow-none p-6 rounded-3xl">
       <CardHeader className="p-0 mb-6">
-        <div className="flex items-center">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
           <TriangleAlert className="w-6 h-6 text-[#1f1c17] mr-2" />
           <CardTitle className="text-[#1f1c17] text-xl font-bold">Handlungsbedarf</CardTitle>
+          </div>
+          {showHeaderLink && (
+            <Link href="/alerts" className="text-xs text-[#1f1c17] hover:underline">Alle Alerts ansehen</Link>
+          )}
         </div>
         <p className="text-xs text-[#1f1c17]/60 max-w-xs mt-1">Dringende Artikel und empfohlene Bestellmengen, basierend auf Prognose und Lieferzeit.</p>
       </CardHeader>
       <CardContent className="p-0">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {sortedAlerts.map((alert) => {
-            const daysToBreach = differenceInDays(parseISO(alert.critical_date_min_stock_breach), new Date())
+            const daysToOrder = differenceInDays(parseISO(alert.recommended_order_date), new Date())
             const severity = getSeverity(alert)
-            const urgency = Math.min(100, Math.max(0, Math.round((1 - daysToBreach / Math.max(alert.delivery_time_days, 1)) * 100)))
+            const urgencyBase = 5
+            const urgency = Math.min(100, Math.max(0, Math.round(((urgencyBase - Math.min(daysToOrder, urgencyBase)) / urgencyBase) * 100)))
             return (
               <div
                 key={alert.article_id}
@@ -125,8 +133,8 @@ export function AlertSection({ alerts, onOpenDetails, limit }: AlertSectionProps
                     <div className="text-lg font-bold text-[#1f1c17]">{alert.stock_current} <span className="text-xs font-normal text-gray-400">Stk.</span></div>
                   </div>
                   <div className="text-right">
-                    <p className="text-[10px] text-gray-500">Kritischer Punkt</p>
-                    <div className={`text-sm font-semibold ${severity.valueClass}`}>{formatDays(daysToBreach)}</div>
+                    <p className="text-[10px] text-gray-500">Bestellzeitpunkt</p>
+                    <div className={`text-sm font-semibold ${severity.valueClass}`}>{formatDays(daysToOrder)}</div>
                   </div>
                 </div>
 
