@@ -6,7 +6,24 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.122.0",
+    "uvicorn>=0.38.0",
+    "feiertage-de>=0.1.6",
+    "geopy>=2.4.1",
+    "jax>=0.8.1",
+    "matplotlib>=3.10.7",
+    "meteostat>=1.7.6",
+    "open-meteo>=0.4.0",
     "openpyxl>=3.1.5",
     "pandas>=2.3.3",
-    "uvicorn>=0.38.0",
+    "prophet>=1.2.1",
+    "pytorch-forecasting>=1.5.0",
+    "statsmodels>=0.14.5",
+    "torch>=2.9.1",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.1.0",
+    "ipywidgets>=8.1.8",
+    "plotly>=6.5.0",
 ]

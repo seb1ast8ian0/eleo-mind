@@ -1,1 +1,9 @@
+<<<<<<< HEAD
 *.pyc
+=======
+src/outgoing/forecast/lightning_logs/
+src/outgoing/forecast/timesfm/
+
+*.pyc
+__pycache__/
+>>>>>>> origin/backend

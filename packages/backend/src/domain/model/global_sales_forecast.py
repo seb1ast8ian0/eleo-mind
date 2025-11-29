@@ -3,13 +3,13 @@ from datetime import date
 
 class WeatherSaleAndSalesForecast(BaseModel):
     date: date
-    amount: int
+    amount: float
     weather_condition: str
     temperature: int
     is_sale: bool
     sale_type: str | None
 
 class GlobalSalesForecast(BaseModel):
-    sales_forecast: int
-    sales_last_month: int
+    sales_forecast: float
+    sales_last_month: float
     forecast: list[WeatherSaleAndSalesForecast]
