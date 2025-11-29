@@ -83,7 +83,7 @@ export function ArticleTable({ articles }: ArticleTableProps) {
         <Table className="">
           <TableHeader>
             <TableRow>
-              <TableHead>Artikel-Nr.</TableHead>
+              <TableHead>SKU</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Kategorie</TableHead>
               <TableHead className="text-right">Bestand</TableHead>

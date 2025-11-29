@@ -22,9 +22,10 @@ interface Alert {
 interface AlertSectionProps {
   alerts: Alert[]
   onOpenDetails?: (alert: Alert) => void
+  limit?: number
 }
 
-export function AlertSection({ alerts, onOpenDetails }: AlertSectionProps) {
+export function AlertSection({ alerts, onOpenDetails, limit }: AlertSectionProps) {
   const router = useRouter()
   const getCategoryIcon = (name: string) => {
     const k = name.toLowerCase()
@@ -41,7 +42,7 @@ export function AlertSection({ alerts, onOpenDetails }: AlertSectionProps) {
   }
   const sortedAlerts = [...alerts]
     .sort((a, b) => new Date(a.critical_date_min_stock_breach).getTime() - new Date(b.critical_date_min_stock_breach).getTime())
-    .slice(0, 4)
+    .slice(0, limit ?? alerts.length)
 
   const getSeverity = (alert: Alert) => {
     const daysToBreach = differenceInDays(parseISO(alert.critical_date_min_stock_breach), new Date())

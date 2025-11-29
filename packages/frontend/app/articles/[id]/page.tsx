@@ -4,6 +4,7 @@ import path from "path"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
+import { AlertTriangle } from "lucide-react"
 import { format, parseISO, differenceInDays } from "date-fns"
 import { OrderButton } from "@/components/dashboard/OrderButton"
 import { StockChart } from "@/components/dashboard/StockChart"
@@ -59,10 +60,10 @@ export default async function ArticleDetail({ params }: { params: Promise<{ id: 
                 <Image src={article.image_path} alt={article.image_alt ?? article.article_name} fill className="object-contain" />
               </div>
               <CardTitle className="text-[#1f1c17] text-xl font-bold">{article.article_name}</CardTitle>
-            </div>
             {severity && <Badge className={`text-[10px] ${severity.className}`}>{severity.label}</Badge>}
+            </div>
           </div>
-          <p className="text-xs text-[#1f1c17]/60 mt-1">ID {article.article_id} • {article.category}</p>
+          <p className="text-xs text-[#1f1c17]/60 mt-1">SKU {article.article_id} • {article.category}</p>
         </CardHeader>
         
         <CardContent className="p-0 space-y-6">
@@ -81,7 +82,7 @@ export default async function ArticleDetail({ params }: { params: Promise<{ id: 
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-[10px] text-gray-500">Bestand</p>
-                  <div className="text-lg font-bold text-[#1f1c17]">{article.stock_current} {article.unit}</div>
+                  <div className={`text-lg font-bold ${daysToBreach !== null && daysToBreach <= 0 ? 'text-red-600' : 'text-[#1f1c17]'}`}>{article.stock_current} {article.unit}</div>
                 </div>
                 <div className="text-right">
                   <p className="text-[10px] text-gray-500">Lieferzeit</p>
@@ -94,7 +95,7 @@ export default async function ArticleDetail({ params }: { params: Promise<{ id: 
                 <div className="space-y-2">
                   <p className="text-[10px] text-gray-500">Bestellvorschlag</p>
                   <div className="text-sm font-medium">Vorgeschlagene Bestellmenge: {alert.recommended_order_quantity} {article.unit}</div>
-                  <div className="text-sm font-medium">Vorgeschlagener Bestellzeitpunkt: {format(parseISO(alert.recommended_order_date), "dd.MM.yyyy")}</div>
+                  <div className="text-sm font-medium flex flex-row">Vorgeschlagener Bestellzeitpunkt: {format(parseISO(alert.recommended_order_date), "dd.MM.yyyy")} <AlertTriangle className="inline-block h-4 w-4 ml-1 text-gray-500" /></div>
                   <div className="text-xs text-gray-500">Kritischer Punkt {daysToBreach !== null ? (daysToBreach <= 0 ? "heute/überfällig" : `${daysToBreach} Tage`) : "–"}</div>
                   <div className="pt-3">
                     <OrderButton href="/order-completed" />

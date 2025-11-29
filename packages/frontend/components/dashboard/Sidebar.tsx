@@ -2,7 +2,8 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { LayoutDashboard, Package, Settings, LogOut, Ship } from "lucide-react"
+import { useEffect, useState } from "react"
+import { Package, Settings, LogOut, Ship, AlertTriangle, Gauge, ChevronDown, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { usePathname } from "next/navigation"
 
@@ -10,8 +11,27 @@ type SidebarProps = React.HTMLAttributes<HTMLDivElement>
 
 export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname()
+  const countries = [
+    { code: "DE", name: "Deutschland", flag: "🇩🇪" },
+    { code: "FR", name: "Frankreich", flag: "🇫🇷" },
+    { code: "IT", name: "Italien", flag: "🇮🇹" },
+    { code: "UK", name: "UK", flag: "🇬🇧" },
+    { code: "AT", name: "Österreich", flag: "🇦🇹" },
+    { code: "CH", name: "Schweiz", flag: "🇨🇭" },
+  ]
+  const [country, setCountry] = useState<string>("DE")
+  const [countryOpen, setCountryOpen] = useState<boolean>(false)
+  useEffect(() => {
+    const saved = typeof window !== "undefined" ? window.localStorage.getItem("eleo-country") : null
+    if (saved) setCountry(saved)
+  }, [])
+  const handleSelectCountry = (c: string) => {
+    setCountry(c)
+    if (typeof window !== "undefined") window.localStorage.setItem("eleo-country", c)
+  }
   const items = [
-    { href: "/", label: "Dashboard", Icon: LayoutDashboard },
+    { href: "/", label: "Dashboard", Icon: Gauge },
+    { href: "/alerts", label: "Handlungsbedarf", Icon: AlertTriangle },
     { href: "/suppliers", label: "Lieferanten", Icon: Ship },
     { href: "/articles", label: "Artikel", Icon: Package },
     { href: "/settings", label: "Einstellungen", Icon: Settings },
@@ -46,7 +66,6 @@ export function Sidebar({ className }: SidebarProps) {
                 >
                   <Icon className={cn("h-5 w-5", active ? "text-[#1f1c17]" : "text-gray-500")} />
                   <span className="font-medium">{label}</span>
-                  {active && <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-full bg-[#1f1c17]" />}
                 </Link>
               )
             })}
@@ -55,10 +74,43 @@ export function Sidebar({ className }: SidebarProps) {
       </div>
 
       <div className="px-4 py-4 border-t border-gray-100">
-        <Link href="#" className="flex items-center gap-3 rounded-xl px-4 py-3 text-gray-500 transition-all hover:text-red-600 hover:bg-red-50">
-            <LogOut className="h-5 w-5" />
-            <span className="font-medium">Logout</span>
-        </Link>
+        <div className="mt-3">
+          <div className="relative">
+            <button
+              onClick={() => setCountryOpen((v) => !v)}
+              className="mt-2 w-full flex items-center justify-between rounded-xl px-4 py-2 text-[#1f1c17] hover:bg-gray-50"
+            >
+              <span className="flex items-center gap-2">
+                <span className="text-lg leading-none">{countries.find((c) => c.code === country)?.flag}</span>
+                <span className="text-sm">{countries.find((c) => c.code === country)?.name}</span>
+              </span>
+              <ChevronDown className="h-4 w-4 text-gray-500" />
+            </button>
+            {countryOpen && (
+              <div className="absolute left-0 right-0 bottom-0 mt-2 rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden z-20">
+                {countries.map((c) => (
+                  <button
+                    key={c.code}
+                    onClick={() => {
+                      handleSelectCountry(c.code)
+                      setCountryOpen(false)
+                    }}
+                    className={cn(
+                      "w-full flex items-center justify-between px-4 py-2 text-[#1f1c17] hover:bg-gray-50",
+                      country === c.code ? "bg-gray-50" : ""
+                    )}
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="text-lg leading-none">{c.flag}</span>
+                      <span className="text-sm">{c.name}</span>
+                    </span>
+                    {country === c.code && <Check className="h-4 w-4 text-gray-500" />}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
         <div className="px-6 pb-6 mb-6">
