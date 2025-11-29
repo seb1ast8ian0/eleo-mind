@@ -4,7 +4,7 @@ import os
 current_file = os.path.abspath(__file__)
 current_dir = os.path.dirname(current_file)
 
-csv_path = f"{current_dir}/sku_forecast_poisson_full.csv"
+csv_path = f"{current_dir}/deepar_full_forecast_patched.csv"
 
 df = pd.read_csv(csv_path)
 df["date"] = pd.to_datetime(df["date"])
