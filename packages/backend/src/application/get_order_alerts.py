@@ -1,7 +1,7 @@
 from domain.service.service import Service
 from domain.model.order import Order
 
-from application.models.order_alerts_response import OrderPredictionResponse, OrderAlerts
+from application.models.alerts_response import OrderPredictionResponse, OrderAlertsResponse
 
 
 class GetOrderAlertsRout:
@@ -28,4 +28,4 @@ class GetOrderAlertsRout:
                 critical_date_min_stock_breach=domain_order.critical_min_stock_date
             ))
 
-        return OrderAlerts(alerts=order_alerts)
+        return OrderAlertsResponse(alerts=order_alerts)

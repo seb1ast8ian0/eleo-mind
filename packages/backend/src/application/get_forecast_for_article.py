@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from domain.service.service import Service
-from application.models.orderAlertForArticle import OrderAlertForArticleRequest, OrderAlertForArticleResponse, ForecastResponse
+from application.models.order_alert_for_article import OrderAlertForArticleRequest, OrderAlertForArticleResponse, ForecastResponse
 
 
 class GetForecastForArticleRout:

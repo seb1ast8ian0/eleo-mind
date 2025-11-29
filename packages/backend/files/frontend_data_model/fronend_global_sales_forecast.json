@@ -1,0 +1,30 @@
+{
+  "sales_forecast": 160,
+  "sales_last_month": 150,
+  "forecast": [
+    {
+      "date": "2025-12-21",
+      "amount": 30,
+      "weather_condition": "rain",
+      "weather_temperature": 3,
+      "is_sale": false,
+      "sale_type": null
+    },
+    {
+      "date": "2025-12-22",
+      "amount": 42,
+      "weather_condition": "rain",
+      "weather_temperature": 4,
+      "is_sale": true,
+      "sale_type": "10% auf alles"
+    },
+    {
+      "date": "2025-12-23",
+      "amount": 50,
+      "weather_condition": "normal",
+      "weather_temperature": 2,
+      "is_sale": true,
+      "sale_type": "24% auf alles"
+    }
+  ]
+}

@@ -19,3 +19,13 @@ Accept: application/json
   "current_stock_for_article": 120,
   "min_stock_for_article": 50
 }
+
+### Get most critical alerts
+POST http://localhost:8080/alerts
+Accept: application/json
+
+{
+    "global_current_stock": 10,
+    "global_min_stock": 3,
+    "amount_of_alerts": 3
+}

@@ -8,7 +8,6 @@
     "stock_current": 18,
     "unit": "Stück",
     "delivery_time_days": 7,
-    "critical_date_min_stock_breach": "2025-12-18",
     "producer_id": 1,
     "division_id": 1
   },
@@ -21,7 +20,6 @@
     "stock_current": 12,
     "unit": "Stück",
     "delivery_time_days": 10,
-    "critical_date_min_stock_breach": "2025-12-12",
     "producer_id": 2,
     "division_id": 2
   },
@@ -34,7 +32,6 @@
     "stock_current": 5,
     "unit": "Stück",
     "delivery_time_days": 14,
-    "critical_date_min_stock_breach": "2025-12-05",
     "producer_id": 3,
     "division_id": 3
   },
@@ -47,7 +44,6 @@
     "stock_current": 9,
     "unit": "Stück",
     "delivery_time_days": 12,
-    "critical_date_min_stock_breach": "2025-12-08",
     "producer_id": 4,
     "division_id": 2
   },
@@ -60,7 +56,6 @@
     "stock_current": 20,
     "unit": "Stück",
     "delivery_time_days": 8,
-    "critical_date_min_stock_breach": "2025-12-23",
     "producer_id": 1,
     "division_id": 4
   },
@@ -73,7 +68,6 @@
     "stock_current": 7,
     "unit": "Stück",
     "delivery_time_days": 11,
-    "critical_date_min_stock_breach": "2025-12-10",
     "producer_id": 2,
     "division_id": 2
   },
@@ -86,7 +80,6 @@
     "stock_current": 4,
     "unit": "Stück",
     "delivery_time_days": 15,
-    "critical_date_min_stock_breach": "2025-12-04",
     "producer_id": 3,
     "division_id": 4
   },
@@ -99,7 +92,6 @@
     "stock_current": 6,
     "unit": "Stück",
     "delivery_time_days": 13,
-    "critical_date_min_stock_breach": "2025-12-07",
     "producer_id": 4,
     "division_id": 4
   },
@@ -112,7 +104,6 @@
     "stock_current": 14,
     "unit": "Stück",
     "delivery_time_days": 9,
-    "critical_date_min_stock_breach": "2025-12-16",
     "producer_id": 1,
     "division_id": 4
   },
@@ -125,7 +116,6 @@
     "stock_current": 3,
     "unit": "Stück",
     "delivery_time_days": 12,
-    "critical_date_min_stock_breach": "2025-12-03",
     "producer_id": 2,
     "division_id": 2
   },
@@ -138,7 +128,6 @@
     "stock_current": 10,
     "unit": "Stück",
     "delivery_time_days": 7,
-    "critical_date_min_stock_breach": "2025-12-20",
     "producer_id": 3,
     "division_id": 1
   },
@@ -151,7 +140,6 @@
     "stock_current": 2,
     "unit": "Stück",
     "delivery_time_days": 16,
-    "critical_date_min_stock_breach": "2025-12-02",
     "producer_id": 4,
     "division_id": 3
   }

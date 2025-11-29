@@ -1,6 +1,7 @@
 import logging
 
 import pandas as pd
+from datetime import date, datetime, timedelta
 
 from domain.model.order import Order, OrderWithForecast
 from domain.model.stock import Stock
@@ -18,14 +19,11 @@ class Service:
         self.stock_service = stock_service
         self.logger = logging.getLogger(__name__)
 
-    def get_article_by_id(self, article_id: str):
-        return self.stock_service.get_article(article_id)
-
     def get_articles(self) -> list[Article]:
         all_articles_df = self.stock_service.get_all_articles()
         return get_articles_from_df(all_articles_df)
 
-    def get_orders(self) -> list[Order]:
+    def get_orders(self, current_stock: int, min_stock: int) -> list[Order]:
         orders: list[Order] = []
         current_stock_df: pd.DataFrame = self.stock_service.get_current_stock()
 
@@ -33,13 +31,14 @@ class Service:
             sku: str = self.stock_service.get_sku_from_series(row)
             duration: int = self.stock_service.get_duration_from_series(row)
 
-            current_in_stock: int = self.stock_service.get_current_stock_for_article(sku)
-            min_stock: int = self.stock_service.get_min_stock_for_article(sku)
+            # current_stock and min_stock are set globaly and are given
+            # current_in_stock: int = self.stock_service.get_current_stock_for_article(sku)
+            # min_stock: int = self.stock_service.get_min_stock_for_article(sku)
 
             deadline_and_quantity: DeadlineAndQuantityModel = get_deadline_and_quantity(
                 sku=sku,
                 duration=duration,
-                current_in_stock=current_in_stock,
+                current_in_stock=current_stock,
                 min_stock=min_stock
             )
 
@@ -48,9 +47,9 @@ class Service:
             order = Order(
                 article=article,
                 quantity=deadline_and_quantity.quantity,
-                deadline=deadline_and_quantity.deadline,
-                min_stock_date=deadline_and_quantity.min_stock_date,
-                current_stock=current_in_stock
+                recommended_order_date=deadline_and_quantity.deadline,
+                critical_min_stock_date=deadline_and_quantity.min_stock_date,
+                current_stock=current_stock
             )
             orders.append(order)
 
@@ -83,6 +82,21 @@ class Service:
             order=order,
             forecast=forecast
         )
+
+    def get_critical_alerts(self, current_stock: int, min_stock: int, amount_of_orders: int) -> list[Order]:
+        global_order_forecast = self.get_orders(current_stock, min_stock)
+
+        today: date = datetime.today().date()
+
+        sorted_orders: list[Order] = sorted(
+            global_order_forecast,
+            key=lambda order: (today - order.recommended_order_date).days
+        )
+
+        # Only return the amount_of_orders most critical
+        return sorted_orders[:amount_of_orders]
+
+
 
 
 
