@@ -15,6 +15,7 @@ dependencies = [
     "pandas>=2.3.3",
     "prophet>=1.2.1",
     "pytorch-forecasting>=1.5.0",
+    "statsmodels>=0.14.5",
     "torch>=2.9.1",
 ]
 

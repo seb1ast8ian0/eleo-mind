@@ -10,5 +10,5 @@ pro SKU:
 1. Order Timestamp
 3. Anzahl
 4. Wetter
-5. Aktion
+5. Aktionen
 6. Preis?
