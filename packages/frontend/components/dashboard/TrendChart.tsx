@@ -100,7 +100,7 @@ export function TrendChart({ history, forecast }: TrendChartProps) {
     const arr = data
       .map((d) => ({
         date: parseISO(d.date),
-        kind: d.weather_condition === "sun" ? "good" : d.weather_condition === "rain" ? "bad" : null,
+        kind: (d.weather_condition === "sun" ? "good" : d.weather_condition === "rain" ? "bad" : null) as "good" | "bad" | null,
       }))
       .sort((a, b) => a.date.getTime() - b.date.getTime())
 

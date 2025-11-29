@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { promises as fs } from 'fs';
 import path from 'path';
 import { KPICards } from '@/components/dashboard/KPICards';
@@ -24,8 +25,13 @@ export default async function Home() {
   const { forecast, alerts, articles } = await getData();
 
   // Calculate KPI data
-  const criticalArticlesCount = alerts.length; // Assuming all in alerts are critical or near critical
   const forecastChangePercent = Math.round(((forecast.sales_forecast - forecast.sales_last_month) / forecast.sales_last_month) * 100);
+
+  const avgStock = articles.length ? articles.reduce((sum: number, a: any) => sum + (a.stock_current || 0), 0) / articles.length : 0
+  const topMovers = articles
+    .map((a: any) => ({ id: a.article_id as string, name: a.article_name as string, percent: avgStock ? Math.round(((a.stock_current - avgStock) / avgStock) * 100) : 0 }))
+    .sort((a: any, b: any) => Math.abs(b.percent) - Math.abs(a.percent))
+    .slice(0, 4)
 
   return (
     <div className="space-y-6">
@@ -49,8 +55,8 @@ export default async function Home() {
             {/* KPIs - Takes up 4 columns */}
             <div className="md:col-span-4 lg:col-span-4">
                <KPICards 
-                 criticalArticlesCount={criticalArticlesCount} 
                  forecastChangePercent={forecastChangePercent} 
+                 topMovers={topMovers}
                />
             </div>
             

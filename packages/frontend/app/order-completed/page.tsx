@@ -4,7 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { CheckCircle2, ArrowLeft } from "lucide-react"
-import { Player, Controls } from "@lottiefiles/react-lottie-player"
+import dynamic from "next/dynamic"
+
+const Player = dynamic(() => import("@lottiefiles/react-lottie-player").then((mod) => mod.Player), {
+  ssr: false,
+})
+const Controls = dynamic(() => import("@lottiefiles/react-lottie-player").then((mod) => mod.Controls), {
+  ssr: false,
+})
 
 export default function OrderCompleted() {
   return (

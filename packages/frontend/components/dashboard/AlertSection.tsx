@@ -1,6 +1,7 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ArrowRight, TriangleAlert } from "lucide-react"
@@ -20,12 +21,24 @@ interface Alert {
 
 interface AlertSectionProps {
   alerts: Alert[]
-  onAcceptSuggestion?: (alert: Alert) => void
   onOpenDetails?: (alert: Alert) => void
 }
 
-export function AlertSection({ alerts, onAcceptSuggestion, onOpenDetails }: AlertSectionProps) {
+export function AlertSection({ alerts, onOpenDetails }: AlertSectionProps) {
   const router = useRouter()
+  const getCategoryIcon = (name: string) => {
+    const k = name.toLowerCase()
+    if (k.includes("zäune") || k.includes("zaun")) return "1_zäune.svg"
+    if (k.includes("geländer") && !k.includes("sichtschutz")) return "2_geländer.svg"
+    if (k.includes("hoftor")) return "3_hoftore.svg"
+    if (k.includes("balkon") && !k.includes("sichtschutz")) return "4_franz_balkone.svg"
+    if (k.includes("sichtschutz") && k.includes("zaun")) return "5_sichtschutz_zaun.svg"
+    if (k.includes("geländer") && k.includes("sichtschutz")) return "6_geländer_mit_sichtschutz.svg"
+    if (k.includes("sichtschutz") && (k.includes("tor") || k.includes("tore"))) return "7_schichtschutz_tore.svg"
+    if (k.includes("sichtschutz") && (k.includes("tür") || k.includes("türen"))) return "9_sichtschutz_türen.svg"
+    if (k.includes("franz") && k.includes("sichtschutz")) return "10_franz_balkone_sichtschutz.svg"
+    return null
+  }
   const sortedAlerts = [...alerts]
     .sort((a, b) => new Date(a.critical_date_min_stock_breach).getTime() - new Date(b.critical_date_min_stock_breach).getTime())
     .slice(0, 4)
@@ -88,9 +101,21 @@ export function AlertSection({ alerts, onAcceptSuggestion, onOpenDetails }: Aler
                   <span className="text-xs text-[#1f1c17]/60">Lieferzeit {alert.delivery_time_days} Tage</span>
                 </div>
 
-                <div className="space-y-1">
-                  <h4 className="font-bold text-sm text-[#1f1c17] truncate" title={alert.article_name}>{alert.article_name}</h4>
-                  <p className="text-xs text-gray-500">{alert.article_id}</p>
+                <div className="flex items-center gap-3">
+                  {getCategoryIcon(alert.article_name) && (
+                    <div className="w-10 h-10 relative">
+                      <Image
+                        src={`/assets/${getCategoryIcon(alert.article_name)}`}
+                        alt={alert.article_name}
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+                  )}
+                  <div className="space-y-1">
+                    <h4 className="font-bold text-sm text-[#1f1c17] truncate" title={alert.article_name}>{alert.article_name}</h4>
+                    <p className="text-xs text-gray-500">{alert.article_id}</p>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-between">

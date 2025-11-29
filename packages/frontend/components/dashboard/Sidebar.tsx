@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { LayoutDashboard, Users, Package, Settings, LogOut } from "lucide-react"
+import { LayoutDashboard, Package, Settings, LogOut, Ship } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { usePathname } from "next/navigation"
 
@@ -12,7 +12,7 @@ export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname()
   const items = [
     { href: "/", label: "Dashboard", Icon: LayoutDashboard },
-    { href: "/customers", label: "Kunden", Icon: Users },
+    { href: "/suppliers", label: "Lieferanten", Icon: Ship },
     { href: "/articles", label: "Artikel", Icon: Package },
     { href: "/settings", label: "Einstellungen", Icon: Settings },
   ]
