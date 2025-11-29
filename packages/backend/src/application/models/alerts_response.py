@@ -23,7 +23,7 @@ class OrderPredictionResponse(BaseModel):
     delivery_time_in_days: int
     producer_id: int
     division_id: int
-    recommended_order_quantity: int
+    recommended_order_quantity: float
     recommended_order_date: date
     critical_date_min_stock_breach: date
 

@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class DeadlineAndQuantityModel(BaseModel):
     deadline: date
-    quantity: int
+    quantity: float
     min_stock_date: date
     sku: str
 
@@ -62,7 +62,7 @@ def _get_deadline_order_date_and_quantity(
 
     return DeadlineAndQuantityModel(
         deadline=datetime.today().date(),
-        quantity=0,
+        quantity=0.0,
         min_stock_date=datetime.today().date() + timedelta(days=90),
         sku=""
     )

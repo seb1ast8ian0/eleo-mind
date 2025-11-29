@@ -47,7 +47,7 @@ def get_weather_sale_and_sales_forecast(start_date: date, end_date: date) -> lis
         is_sale = bool(row["sale_active"])
         sale_type: str | None = None
         if is_sale:
-            sale_percent = row["sales_percent"]
+            sale_percent = row["sale_percent"]
             sale_type = f"{int(sale_percent * 100)}% auf alles"
 
         forecast.append(

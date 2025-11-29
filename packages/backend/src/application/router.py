@@ -34,14 +34,14 @@ class AppRouter:
             description="Gets all articles"
         )
 
-        get_order_alerts_rout = GetOrderAlertsRout(self.svc)
-        self.router.add_api_route(
-            "/order_alerts",
-            get_order_alerts_rout.get_order_prediction,
-            methods=["POST"],
-            operation_id="get_order_alerts",
-            response_model=OrderAlertsResponse
-        )
+        # get_order_alerts_rout = GetOrderAlertsRout(self.svc)
+        # self.router.add_api_route(
+        #     "/order_alerts",
+        #     get_order_alerts_rout.get_order_prediction,
+        #     methods=["POST"],
+        #     operation_id="get_order_alerts",
+        #     response_model=OrderAlertsResponse
+        # )
 
         # POST "/forecast" forcast für einen spezifischen Artikel
         get_forecast_for_article_rout = GetForecastForArticleRout(self.svc)

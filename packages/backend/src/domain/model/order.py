@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 class Order(BaseModel):
     article: Article
-    quantity: int
+    quantity: float
     recommended_order_date: date
     critical_min_stock_date: date
     current_stock: int
@@ -20,7 +20,7 @@ class Order(BaseModel):
 
 class StockDevelopmentForecast(BaseModel):
     date: date
-    stock_forecast_for_date: int
+    stock_forecast_for_date: float
 
 class OrderWithForecast(BaseModel):
     order: Order
