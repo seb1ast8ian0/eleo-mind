@@ -27,7 +27,30 @@ class Stock:
     def get_all_articles(self) -> pd.DataFrame:
         return self.all_articles_df
 
-    def get_current_stock_for_article(self, article_id: str):
+    def get_current_stock(self) -> pd.DataFrame:
+        return self.df
+
+    def get_sku_from_series(self, series: pd.Series) -> str:
+        sku: str = str(series["SKU"])
+
+        if sku == '':
+            msg = f"Tried to get SKU for pd.Series: {series}, but sku is ''"
+            self.logger.error(msg)
+            raise ValueError(msg)
+
+        return sku
+
+    def get_duration_from_series(self, series: pd.Series):
+        duration: int = int(series["duration"])
+
+        if duration == 0:
+            msg = f"Tried to get duration for pd.Series: {series}, but duration is 0"
+            self.logger.error(msg)
+            raise ValueError(msg)
+
+        return duration
+
+    def get_current_stock_for_article(self, article_id: str) -> int:
         article_df = self.get_article(article_id)
 
         current_in_stock = article_df["amount"]
@@ -36,9 +59,11 @@ class Stock:
             self.logger.error(msg)
             raise ValueError(msg)
 
-        return current_in_stock
+        self.logger.debug(f"Got current_in_stock for article: {article_id}: {current_in_stock}")
 
-    def get_min_stock_for_article(self, article_id: str):
+        return int(current_in_stock.item())
+
+    def get_min_stock_for_article(self, article_id: str) -> int:
         article_df = self.get_article(article_id)
 
         min_stock = article_df["min_amount"]
@@ -46,5 +71,9 @@ class Stock:
             msg: str = f"tried to retrieve min_amount for article {article_id}, but 'min_amount' is None for df: {article_df}"
             self.logger.error(msg)
             raise ValueError(msg)
+
+        self.logger.debug(f"Got min_stock for article_id: {article_id}: {min_stock}")
+
+        return int(min_stock.item())
 
 

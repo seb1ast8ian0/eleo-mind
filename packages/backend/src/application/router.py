@@ -2,7 +2,9 @@ from fastapi import APIRouter
 
 from application.get_articles import GetArticlesRout
 from application.get_specific_article import GetSpecificArticleRout
+from application.get_order_alerts import GetOrderAlertsRout
 from application.models.article_response import ArticlesResponse, ArticleResponse
+from application.models.order_alerts_response import OrderAlerts
 from domain.service.service import Service
 
 class AppRouter:
@@ -33,4 +35,13 @@ class AppRouter:
             methods=["GET"],
             operation_id="get_specific_article",
             response_model=ArticleResponse
+        )
+
+        get_order_alerts_rout = GetOrderAlertsRout(self.svc)
+        self.router.add_api_route(
+            "/order_alerts",
+            get_order_alerts_rout.get_order_prediction,
+            methods=["GET"],
+            operation_id="get_order_alerts",
+            response_model=OrderAlerts
         )
