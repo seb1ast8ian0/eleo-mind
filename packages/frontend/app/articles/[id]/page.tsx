@@ -192,7 +192,7 @@ export default function ArticleDetail() {
               {detail ? (
                 <div className="space-y-2">
                   <p className="text-[10px] text-gray-500">Bestellvorschlag</p>
-                  <div className="text-sm font-medium">Vorgeschlagene Bestellmenge: {detail.recommended_order_quantity} {article.unit}</div>
+                  <div className="text-sm font-medium">Vorgeschlagene Bestellmenge: {Math.ceil(detail.recommended_order_quantity)} {article.unit}</div>
                   <div className="text-sm font-medium flex flex-row">Vorgeschlagener Bestellzeitpunkt: {format(parseISO(detail.recommended_order_date), "dd.MM.yyyy")} <AlertTriangle className="inline-block h-4 w-4 ml-1 text-gray-500" /></div>
                   <div className="text-xs text-gray-500">Kritischer Punkt {daysToBreach !== null ? (daysToBreach <= 0 ? "heute/überfällig" : `${daysToBreach} Tage`) : "–"}</div>
                   <div className="pt-3">

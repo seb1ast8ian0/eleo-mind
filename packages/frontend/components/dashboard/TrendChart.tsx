@@ -44,7 +44,7 @@ const CustomTooltip = ({ active, payload }: TooltipProps) => {
         <p className="font-bold text-sm mb-1">{format(dateObj, "dd. MMM", { locale: de })}</p>
         <div className="flex items-center gap-2">
            <div className="w-2 h-2 rounded-full bg-[#9eb782]"></div>
-           <p className="text-sm font-medium">{dataPoint.amount} Einheiten</p>
+           <p className="text-sm font-medium">{Math.ceil(dataPoint.amount)} Einheiten</p>
         </div>
         <p className="text-xs text-gray-500 mt-1">
            {dataPoint.weather_condition}, {dataPoint.weather_temperature}°C
@@ -289,7 +289,9 @@ export function TrendChart({ history, forecast }: TrendChartProps) {
                 axisLine={false}
                 tickLine={false}
                 tick={{ fill: "#ffffff", opacity: 0.7, fontSize: 10 }}
-                domain={[0, maxAmount]}
+                allowDecimals={false}
+                tickFormatter={(v) => Math.round(v).toString()}
+                domain={[0, Math.ceil(maxAmount)]}
               />
               <Tooltip content={<CustomTooltip />} cursor={false} />
               <Area

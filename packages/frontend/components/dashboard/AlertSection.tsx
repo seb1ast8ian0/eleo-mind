@@ -145,7 +145,7 @@ export function AlertSection({ alerts, onOpenDetails, limit, showHeaderLink }: A
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-[10px] text-gray-500">Bestellvorschlag</p>
-                    <div className="text-sm font-medium">{alert.recommended_order_quantity} Stk. <span className="text-xs text-gray-500">bis {format(parseISO(alert.recommended_order_date), "dd.MM.yyyy")}</span></div>
+                    <div className="text-sm font-medium">{Math.ceil(alert.recommended_order_quantity)} Stk. <span className="text-xs text-gray-500">bis {format(parseISO(alert.recommended_order_date), "dd.MM.yyyy")}</span></div>
                   </div>
                   <div className="flex items-center gap-2">
                     <Button

@@ -31,7 +31,7 @@ def setup_logging():
             "uvicorn.access": {"level": "INFO"},
 
             # Loggers of this application
-            "application": {"level": "DEBUG"},
-            "domain": {"level": "DEBUG"},
+            #"application": {"level": "DEBUG"},
+            #"domain": {"level": "DEBUG"},
         }
     })
