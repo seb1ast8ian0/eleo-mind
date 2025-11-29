@@ -4,8 +4,8 @@ import pandas as pd
 from datetime import datetime, timedelta, date
 from pydantic import BaseModel
 
-from domain.model.order import StockDevelopmentForecast
-from outgoing.forecast.forecasts import get_sku_forecast
+from domain.model.article import Article
+from domain.model.order import StockDevelopmentForecast, OrderWithForecast, Order
 
 logger = logging.getLogger(__name__)
 
@@ -20,29 +20,30 @@ class DeadlineAndQuantityModel(BaseModel):
         self.sku = sku
 
 
-# def _predict(sku: str, start_date: date, end_date: date) -> pd.DataFrame:
-#     import random
-#     today = datetime.today().date()
+def _predict(sku: str, start_date: date, end_date: date) -> pd.DataFrame:
+    import random
+    today = datetime.today().date()
 
-#     num_days: int = (end_date - start_date).days + 1
+    num_days: int = (end_date - start_date).days + 1
 
-#     data = {
-#         "date": [today + timedelta(days=i) for i in range(num_days)],
-#         "qty": [random.randint(0, 5) for _ in range(num_days)],
-#     }
+    data = {
+        "date": [today + timedelta(days=i) for i in range(num_days)],
+        "qty": [random.randint(0, 5) for _ in range(num_days)],
+    }
 
-#     df = pd.DataFrame(data)
+    df = pd.DataFrame(data)
 
-#     return df
+    return df
 
 
 def _get_deadline_order_date_and_quantity(
         delivery_time: int, prediction_of_orders: pd.DataFrame, current_in_stock: int, min_in_stock: int
 ) -> DeadlineAndQuantityModel:
     stock = current_in_stock
-    quantity = 0
+
     for _, row in prediction_of_orders.iterrows():
-        quantity += row["qty"]
+
+        quantity = row["qty"]
         stock -= quantity
 
         if stock <= min_in_stock:
@@ -56,6 +57,7 @@ def _get_deadline_order_date_and_quantity(
                 sku=""
             )
 
+
     return DeadlineAndQuantityModel(
         deadline=datetime.today().date(),
         quantity=0,
@@ -64,21 +66,12 @@ def _get_deadline_order_date_and_quantity(
     )
 
 
-def get_deadline_and_quantity(sku: str, duration: int, current_in_stock: int,
-                              min_stock: int) -> DeadlineAndQuantityModel:
-    now = datetime.today()
-
-    end_date = now + timedelta(90)
-
-    prediction_of_orders = get_sku_forecast(
-        sku=sku,
-        start_date=now,
-        end_date=end_date
-    )
+def _get_deadline_and_quantity(sku: str, prediction_df: pd.DataFrame, duration: int, current_in_stock: int,
+                               min_stock: int) -> DeadlineAndQuantityModel:
 
     order_date_and_quantity: DeadlineAndQuantityModel = _get_deadline_order_date_and_quantity(
         delivery_time=duration,
-        prediction_of_orders=prediction_of_orders,
+        prediction_of_orders=prediction_df,
         current_in_stock=current_in_stock,
         min_in_stock=min_stock
     )
@@ -89,11 +82,7 @@ def get_deadline_and_quantity(sku: str, duration: int, current_in_stock: int,
     return order_date_and_quantity
 
 
-def get_forecast_for_article_stock_development(sku: str, current_stock: int) -> list[StockDevelopmentForecast]:
-    start_time = datetime.today().date()
-    end_time = start_time + timedelta(days=30)
-    prediction_df = get_sku_forecast(sku, start_time, end_time)
-
+def _get_stock_development_list(prediction_df: pd.DataFrame, current_stock: int, amount_of_members: int) -> list[StockDevelopmentForecast]:
     stock_development: list[StockDevelopmentForecast] = []
 
     stock_forecast = current_stock
@@ -111,4 +100,31 @@ def get_forecast_for_article_stock_development(sku: str, current_stock: int) -> 
 
         stock_development.append(stock_development_for_date)
 
+        if len(stock_development) >= amount_of_members:
+            break
+
     return stock_development
+
+def get_stock_development_forecast(article: Article, current_in_stock: int, min_stock: int, amount_forecast_members: int) -> OrderWithForecast:
+    start_time = datetime.today().date()
+    end_time = start_time + timedelta(days=90)
+    prediction_df = _predict(article.sku, start_time, end_time)
+
+    stock_development = _get_stock_development_list(
+        prediction_df, current_in_stock, amount_forecast_members
+    )
+
+    deadline_and_quantity = _get_deadline_and_quantity(
+        article.sku, prediction_df, article.delivery_time, current_in_stock, min_stock
+    )
+
+    return OrderWithForecast(
+        order=Order(
+            article=article,
+            current_stock=current_in_stock,
+            recommended_order_date=deadline_and_quantity.deadline,
+            critical_min_stock_date=deadline_and_quantity.min_stock_date,
+            quantity=deadline_and_quantity.quantity,
+        ),
+        forecast=stock_development
+    )
