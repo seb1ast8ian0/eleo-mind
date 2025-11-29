@@ -57,7 +57,7 @@ class Service:
             )
             orders.append(order)
 
-            self.logger.debug(f"appended order: {order}")
+            self.logger.debug(f"appended critical order: {order}")
 
         return orders
 
@@ -71,6 +71,8 @@ class Service:
             current_in_stock=current_stock_for_article,
             min_stock=min_stock_for_article
         )
+
+        self.logger.info(f"Got deadline_and_quantity for sku: {sku}: {deadline_and_quantity}")
 
         order: Order = Order(
             article=article,

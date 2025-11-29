@@ -1,3 +1,5 @@
+import logging
+
 from domain.service.service import Service
 from domain.model.order import Order
 
@@ -7,11 +9,15 @@ from application.models.alerts_response import OrderPredictionResponse, OrderAle
 class GetOrderAlertsRout:
 
     svc: Service
+    logger: logging.Logger = logging.getLogger(__name__)
 
     def __init__(self, svc: Service):
         self.svc = svc
 
     def get_order_prediction(self, req: OrderPredictionRequest):
+
+        self.logger.info(f"/order_alerts got called with request body {req}")
+
         domain_orders: list[Order] = self.svc.get_orders(
             req.global_current_stock, req.global_min_stock
         )

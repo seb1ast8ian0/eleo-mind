@@ -1,4 +1,4 @@
-from datetime import datetime
+import logging
 
 from domain.service.service import Service
 from application.models.order_alert_for_article import OrderAlertForArticleRequest, OrderAlertForArticleResponse, ForecastResponse
@@ -7,11 +7,15 @@ from application.models.order_alert_for_article import OrderAlertForArticleReque
 class GetForecastForArticleRout:
 
     svc: Service
+    logger: logging.Logger = logging.getLogger(__name__)
 
     def __init__(self, svc: Service):
         self.svc = svc
 
     def get_forecast_for_article(self, req: OrderAlertForArticleRequest):
+
+        self.logger.info(f"/forecast got called with request body: {req}")
+
         order_with_forecast = self.svc.get_forecast_for_article(
             req.article_id, req.current_stock_for_article, req.min_stock_for_article
         )
