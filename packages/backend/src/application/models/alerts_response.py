@@ -9,6 +9,7 @@ class GetOrderAlertsRequest(BaseModel):
 
 class OrderPredictionResponse(BaseModel):
     article_id: str
+    coating: str
     article_name: str | None = None
     category: str | None = None
     image_path: str | None = None

@@ -6,6 +6,7 @@ import random
 class ArticleResponse(BaseModel):
     article_id: str
     article_name: str | None = None
+    coating: str
     category: str | None = None
     image_path: str | None = None
     image_alt: str | None = None
@@ -23,6 +24,7 @@ class ArticlesResponse(BaseModel):
 def article_response_from_domain_article(domain_article: Article) -> ArticleResponse:
     return ArticleResponse(
         article_id=domain_article.sku,
+        coating=domain_article.coating,
         delivery_time_days=domain_article.delivery_time,
         producer_id=domain_article.producer_id,
         division_id=domain_article.production_line

@@ -13,6 +13,7 @@ class ForecastResponse(BaseModel):
 
 class OrderAlertForArticleResponse(BaseModel):
     article_id: str
+    coating: str
     producer_id: int
     division_id: int
     delivery_time_days: int

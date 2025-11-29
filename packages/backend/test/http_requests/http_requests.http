@@ -1,11 +1,6 @@
 GET http://localhost:8080/article
 Accept: application/json
 
-### Article by ID
-@article_id =9101UB
-GET http://localhost:8080/article/{{article_id}}
-Accept: application/json
-
 ### Get order Allerts
 GET http://localhost:8080/order_alerts
 Accept: application/json

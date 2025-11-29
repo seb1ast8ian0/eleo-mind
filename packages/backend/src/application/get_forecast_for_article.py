@@ -28,6 +28,7 @@ class GetForecastForArticleRout:
 
         return OrderAlertForArticleResponse(
             article_id=order_with_forecast.order.article.sku,
+            coating=order_with_forecast.order.article.coating,
             stock_current=req.current_stock_for_article,
             delivery_time_days=order_with_forecast.order.article.delivery_time,
             critical_date_min_stock_breach=order_with_forecast.order.critical_min_stock_date,

@@ -52,6 +52,7 @@ class AppRouter:
             description="Gets the forecast for a specific article"
         )
 
+        # POST „/alerts“ mit Top 3 Kritischen Artikeln (datenstruktur:mock_alerts.json)
         get_alerts_rout = GetAlertsRout(self.svc)
         self.router.add_api_route(
             "/alerts",
@@ -65,4 +66,3 @@ class AppRouter:
 
 
         # TODO: GET /global-forecast“  für forecast über alle artikel 30 Tage (datenstruktur:frontend_global_sales.json)
-        # TODO: GET „/alerts“ mit Top 3 Kritischen Artikeln (datenstruktur:mock_alerts.json)

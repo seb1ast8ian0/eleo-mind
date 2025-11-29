@@ -24,6 +24,7 @@ class GetAlertsRout:
             prediction_response.append(
                 OrderPredictionResponse(
                     article_id=alert.article.sku,
+                    coating=alert.article.coating,
                     recommended_order_date=alert.recommended_order_date,
                     recommended_order_quantity=alert.quantity,
                     critical_date_min_stock_breach=alert.critical_min_stock_date,
