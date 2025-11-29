@@ -27,7 +27,7 @@ def _predict(sku: str, start_date: date, end_date: date) -> pd.DataFrame:
 
     data = {
         "date": [today + timedelta(days=i) for i in range(num_days)],
-        "quantity": [random.randint(0, 5) for _ in range(num_days)],
+        "qty": [random.randint(0, 5) for _ in range(num_days)],
     }
 
     df = pd.DataFrame(data)
@@ -41,7 +41,7 @@ def _get_deadline_order_date_and_quantity(
     stock = current_in_stock
     quantity = 0
     for _, row in prediction_of_orders.iterrows():
-        quantity += row["quantity"]
+        quantity += row["qty"]
         stock -= quantity
 
         if stock <= min_in_stock:
@@ -98,7 +98,7 @@ def get_forecast_for_article_stock_development(sku: str, current_stock: int) -> 
     stock_forecast = current_stock
 
     for _, row in prediction_df.iterrows():
-        predicted_purchased_amount = row["quantity"]
+        predicted_purchased_amount = row["qty"]
         date_for_forecast = row["date"]
 
         stock_forecast -= predicted_purchased_amount
