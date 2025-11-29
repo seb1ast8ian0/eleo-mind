@@ -2,7 +2,7 @@
 GET http://localhost:8080/article
 Accept: application/json
 
-### Get order Allerts
+### Get order Allerts @deprecated
 POST http://localhost:8080/order_alerts
 Accept: application/json
 
@@ -11,14 +11,14 @@ Accept: application/json
     "global_min_stock": 3
 }
 
-### Get forecast
+### Get forecast for article
 POST http://localhost:8080/forecast
 Accept: application/json
 
 {
     "article_id": "9101DX",
-    "current_stock_for_article": 120,
-    "min_stock_for_article": 50
+    "current_stock_for_article": 50,
+    "min_stock_for_article": 3
 }
 
 ### Get most critical alerts
@@ -26,7 +26,7 @@ POST http://localhost:8080/alerts
 Accept: application/json
 
 {
-    "global_current_stock": 10,
+    "global_current_stock": 50,
     "global_min_stock": 3,
     "amount_of_alerts": 3
 }
