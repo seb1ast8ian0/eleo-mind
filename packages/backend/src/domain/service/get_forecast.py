@@ -27,7 +27,7 @@ def _predict_with_weather_and_sales(start_date: date, end_date: date) -> pd.Data
         "tavg": [round(random.uniform(-5.0, 30.0), 1) for _ in days],
         "weather_label": [random.choice(weather_labels) for _ in days],
         "sale_active": [random.choice([True, False]) for _ in days],
-        "sales_percent": [round(random.uniform(0.0, 0.5), 2) for _ in days],
+        "sale_percent": [round(random.uniform(0.0, 0.5), 2) for _ in days],
     }
 
     df: pd.DataFrame = pd.DataFrame(data)
