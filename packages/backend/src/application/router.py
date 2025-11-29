@@ -23,7 +23,7 @@ class AppRouter:
         self._initialize_routes()
 
     def _initialize_routes(self):
-        # GET "/articles" über alle article
+        # GET "/article" über alle article
         get_articles_rout = GetArticlesRout(self.svc)
         self.router.add_api_route(
             "/article",
@@ -38,7 +38,7 @@ class AppRouter:
         self.router.add_api_route(
             "/order_alerts",
             get_order_alerts_rout.get_order_prediction,
-            methods=["GET"],
+            methods=["POST"],
             operation_id="get_order_alerts",
             response_model=OrderAlertsResponse
         )

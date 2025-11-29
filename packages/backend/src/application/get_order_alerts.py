@@ -1,7 +1,7 @@
 from domain.service.service import Service
 from domain.model.order import Order
 
-from application.models.alerts_response import OrderPredictionResponse, OrderAlertsResponse
+from application.models.alerts_response import OrderPredictionResponse, OrderAlertsResponse, OrderPredictionRequest
 
 
 class GetOrderAlertsRout:
@@ -11,8 +11,10 @@ class GetOrderAlertsRout:
     def __init__(self, svc: Service):
         self.svc = svc
 
-    def get_order_prediction(self):
-        domain_orders: list[Order] = self.svc.get_orders()
+    def get_order_prediction(self, req: OrderPredictionRequest):
+        domain_orders: list[Order] = self.svc.get_orders(
+            req.global_current_stock, req.global_min_stock
+        )
 
         order_alerts: list[OrderPredictionResponse] = []
 

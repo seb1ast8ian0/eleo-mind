@@ -2,6 +2,10 @@ from pydantic import BaseModel
 from datetime import date
 import random
 
+class OrderPredictionRequest(BaseModel):
+    global_current_stock: int
+    global_min_stock: int
+
 class GetOrderAlertsRequest(BaseModel):
     global_current_stock: int
     global_min_stock: int
