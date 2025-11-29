@@ -8,6 +8,7 @@ from domain.model.order import StockDevelopmentForecast
 
 logger = logging.getLogger(__name__)
 
+
 class DeadlineAndQuantityModel(BaseModel):
     deadline: date
     quantity: int
@@ -17,22 +18,26 @@ class DeadlineAndQuantityModel(BaseModel):
     def set_sku(self, sku: str):
         self.sku = sku
 
+
 def _predict(sku: str, start_date: date, end_date: date) -> pd.DataFrame:
     import random
     today = datetime.today().date()
+
+    num_days: int = (end_date - start_date).days + 1
+
     data = {
-        "date": [today + timedelta(days=i) for i in range(10)],
-        "quantity": [random.randint(1, 100) for _ in range(10)],
+        "date": [today + timedelta(days=i) for i in range(num_days)],
+        "quantity": [random.randint(0, 5) for _ in range(num_days)],
     }
 
     df = pd.DataFrame(data)
 
     return df
 
+
 def _get_deadline_order_date_and_quantity(
         delivery_time: int, prediction_of_orders: pd.DataFrame, current_in_stock: int, min_in_stock: int
 ) -> DeadlineAndQuantityModel:
-
     stock = current_in_stock
     quantity = 0
     for _, row in prediction_of_orders.iterrows():
@@ -58,7 +63,8 @@ def _get_deadline_order_date_and_quantity(
     )
 
 
-def get_deadline_and_quantity(sku: str, duration: int, current_in_stock: int, min_stock: int) -> DeadlineAndQuantityModel:
+def get_deadline_and_quantity(sku: str, duration: int, current_in_stock: int,
+                              min_stock: int) -> DeadlineAndQuantityModel:
     now = datetime.today()
 
     end_date = now + timedelta(90)
@@ -76,17 +82,16 @@ def get_deadline_and_quantity(sku: str, duration: int, current_in_stock: int, mi
         min_in_stock=min_stock
     )
 
-
     order_date_and_quantity.set_sku(sku)
     logger.debug(f"Got order_date_and_quantity for sku: {sku}: {order_date_and_quantity}")
 
     return order_date_and_quantity
 
+
 def get_forecast_for_article_stock_development(sku: str, current_stock: int) -> list[StockDevelopmentForecast]:
     start_time = datetime.today().date()
     end_time = start_time + timedelta(days=30)
     prediction_df = _predict(sku, start_time, end_time)
-
 
     stock_development: list[StockDevelopmentForecast] = []
 
@@ -106,5 +111,3 @@ def get_forecast_for_article_stock_development(sku: str, current_stock: int) -> 
         stock_development.append(stock_development_for_date)
 
     return stock_development
-
-

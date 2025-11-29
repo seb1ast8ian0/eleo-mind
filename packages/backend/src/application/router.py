@@ -1,11 +1,13 @@
 from fastapi import APIRouter
 
 from application.get_articles import GetArticlesRout
+from application.get_global_forecast import GetGlobalForecastRout
 from application.get_order_alerts import GetOrderAlertsRout
 from application.get_forecast_for_article import GetForecastForArticleRout
 from application.models.article_response import ArticlesResponse, ArticleResponse
 from application.get_alerts import GetAlertsRout
 from application.models.alerts_response import OrderAlertsResponse
+from application.models.global_sales_response import GlobalForecastResponse
 from application.models.order_alert_for_article import OrderAlertForArticleResponse, OrderAlertForArticleRequest
 from domain.service.service import Service
 
@@ -21,7 +23,7 @@ class AppRouter:
         self._initialize_routes()
 
     def _initialize_routes(self):
-        ### GET „/articles“ über alle article (datenstruktur:mock_articles.json)
+        # GET "/articles" über alle article
         get_articles_rout = GetArticlesRout(self.svc)
         self.router.add_api_route(
             "/article",
@@ -52,7 +54,7 @@ class AppRouter:
             description="Gets the forecast for a specific article"
         )
 
-        # POST „/alerts“ mit Top 3 Kritischen Artikeln (datenstruktur:mock_alerts.json)
+        # POST "/alerts" mit Top 3 kritischen Artikeln (datenstruktur:mock_alerts.json)
         get_alerts_rout = GetAlertsRout(self.svc)
         self.router.add_api_route(
             "/alerts",
@@ -63,6 +65,12 @@ class AppRouter:
             description="Gets the most critical alerts"
         )
 
-
-
-        # TODO: GET /global-forecast“  für forecast über alle artikel 30 Tage (datenstruktur:frontend_global_sales.json)
+        # GET "/global-forecast"  für forecast über alle artikel 30 Tage (datenstruktur:frontend_global_sales.json)
+        get_global_forecast_rout = GetGlobalForecastRout(self.svc)
+        self.router.add_api_route(
+            "/global-forecast",
+            get_global_forecast_rout.get_global_forecast,
+            methods=["GET"],
+            operation_id="get_global_forecast",
+            response_model=GlobalForecastResponse
+        )

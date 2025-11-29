@@ -24,3 +24,7 @@ Accept: application/json
     "global_min_stock": 3,
     "amount_of_alerts": 3
 }
+
+### Get global forecast
+GET http://localhost:8080/global-forecast
+Accept: application/json

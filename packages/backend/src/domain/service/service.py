@@ -3,11 +3,15 @@ import logging
 import pandas as pd
 from datetime import date, datetime, timedelta
 
+from domain.model.global_sales_forecast import GlobalSalesForecast
 from domain.model.order import Order, OrderWithForecast
 from domain.model.stock import Stock
 
 from domain.model.article import get_articles_from_df, Article, get_specific_article_from_df
 from domain.service.determin_reorder import get_deadline_and_quantity, DeadlineAndQuantityModel, get_forecast_for_article_stock_development
+
+from domain.service.get_forecast import get_weather_sale_and_sales_forecast
+
 
 class Service:
 
@@ -95,6 +99,28 @@ class Service:
 
         # Only return the amount_of_orders most critical
         return sorted_orders[:amount_of_orders]
+
+    def get_global_forecast(self) -> GlobalSalesForecast:
+        # Determine amount of sold articles in the last 30 days
+        end_date: date = datetime.today().date() - timedelta(days=1)
+        start_date: date = end_date - timedelta(days=30)
+        weather_sale_and_sales_history = get_weather_sale_and_sales_forecast(start_date, end_date)
+        total_sales_history = 0
+        for history in weather_sale_and_sales_history:
+            total_sales_history += history.amount
+
+        start_date: date = datetime.today().date()
+        end_date: date = start_date + timedelta(days=30)
+        weather_sale_and_sales_forecasts = get_weather_sale_and_sales_forecast(start_date, end_date)
+        total_sales_forecast = 0
+        for forcast in weather_sale_and_sales_forecasts:
+            total_sales_forecast += forcast.amount
+
+        return GlobalSalesForecast(
+            sales_last_month=total_sales_history,
+            sales_forecast=total_sales_forecast,
+            forecast=weather_sale_and_sales_forecasts
+        )
 
 
 
