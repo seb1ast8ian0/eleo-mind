@@ -2,11 +2,11 @@ import logging
 
 import pandas as pd
 
-from domain.model.order import Order
+from domain.model.order import Order, OrderWithForecast
 from domain.model.stock import Stock
 
 from domain.model.article import get_articles_from_df, Article, get_specific_article_from_df
-from domain.service.determin_reorder import get_deadline_and_quantity, DeadlineAndQuantityModel
+from domain.service.determin_reorder import get_deadline_and_quantity, DeadlineAndQuantityModel, get_forecast_for_article_stock_development
 
 class Service:
 
@@ -36,19 +36,14 @@ class Service:
             current_in_stock: int = self.stock_service.get_current_stock_for_article(sku)
             min_stock: int = self.stock_service.get_min_stock_for_article(sku)
 
-            deadline_and_quantity = get_deadline_and_quantity(
+            deadline_and_quantity: DeadlineAndQuantityModel = get_deadline_and_quantity(
                 sku=sku,
                 duration=duration,
                 current_in_stock=current_in_stock,
                 min_stock=min_stock
             )
 
-            if deadline_and_quantity is None:
-                continue
-
             article: Article = get_specific_article_from_df(self.stock_service.get_article(sku))
-
-            print(f"article: {article}")
 
             order = Order(
                 article=article,
@@ -62,3 +57,34 @@ class Service:
             self.logger.debug(f"appended order: {order}")
 
         return orders
+
+    def get_forecast_for_article(self, sku: str, current_stock_for_article: int, min_stock_for_article) -> OrderWithForecast:
+
+        article: Article = get_specific_article_from_df(self.stock_service.get_article(sku))
+
+        deadline_and_quantity: DeadlineAndQuantityModel = get_deadline_and_quantity(
+            sku=sku,
+            duration=article.delivery_time,
+            current_in_stock=current_stock_for_article,
+            min_stock=min_stock_for_article
+        )
+
+        order: Order = Order(
+            article=article,
+            quantity=deadline_and_quantity.quantity,
+            recommended_order_date=deadline_and_quantity.deadline,
+            critical_min_stock_date=deadline_and_quantity.min_stock_date,
+            current_stock=current_stock_for_article
+        )
+
+        forecast = get_forecast_for_article_stock_development(sku, current_stock_for_article)
+
+        return OrderWithForecast(
+            order=order,
+            forecast=forecast
+        )
+
+
+
+
+
