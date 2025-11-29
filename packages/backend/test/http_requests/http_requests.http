@@ -18,7 +18,7 @@ Accept: application/json
 {
     "article_id": "9101DX",
     "current_stock_for_article": 50,
-    "min_stock_for_article": 3
+    "min_stock_for_article": 48
 }
 
 ### Get most critical alerts
@@ -27,7 +27,7 @@ Accept: application/json
 
 {
     "global_current_stock": 50,
-    "global_min_stock": 3,
+    "global_min_stock": 47,
     "amount_of_alerts": 3
 }
 
