@@ -1,6 +1,12 @@
 import pandas as pd
 
-df = pd.read_csv("/Users/rhombus19/projects/eleo/eleo-mind/packages/backend/src/outgoing/forecast/sku_forecast_poisson_full.csv")
+import os
+current_file = os.path.abspath(__file__)
+current_dir = os.path.dirname(current_file)
+
+csv_path = f"{current_dir}/sku_forecast_poisson_full.csv"
+
+df = pd.read_csv(csv_path)
 df["date"] = pd.to_datetime(df["date"])
 
 daily = (
@@ -17,15 +23,16 @@ daily = (
 )
 
 def get_sku_forecast(sku, start_date, end_date):
-    start_date = pd.to_datetime(start_date)
-    end_date = pd.to_datetime(end_date)
+    start_date = pd.Timestamp(start_date)
+    end_date = pd.Timestamp(end_date)
+    sku = sku.lower()
 
     mask = (df["date"] >= start_date) & (df["date"] <= end_date) & (df["SKU"] == sku)
     return df.loc[mask, ["date", "qty", "tavg", "sale_percent", "sale_active", "weather_label"]]
 
 def get_daily_forecast(start_date, end_date):
-    start_date = pd.to_datetime(start_date)
-    end_date = pd.to_datetime(end_date)
+    start_date = pd.Timestamp(start_date)
+    end_date = pd.Timestamp(end_date)
 
     mask = (daily["date"] >= start_date) & (daily["date"] <= end_date)
     return daily.loc[mask, ["date", "qty", "tavg", "sale_percent", "sale_active", "weather_label"]]

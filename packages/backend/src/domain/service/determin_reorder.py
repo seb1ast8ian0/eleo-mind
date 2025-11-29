@@ -7,6 +7,8 @@ from pydantic import BaseModel
 from domain.model.article import Article
 from domain.model.order import StockDevelopmentForecast, OrderWithForecast, Order
 
+from outgoing.forecast.forecasts import get_sku_forecast
+
 logger = logging.getLogger(__name__)
 
 
@@ -20,20 +22,20 @@ class DeadlineAndQuantityModel(BaseModel):
         self.sku = sku
 
 
-def _predict(sku: str, start_date: date, end_date: date) -> pd.DataFrame:
-    import random
-    today = datetime.today().date()
-
-    num_days: int = (end_date - start_date).days + 1
-
-    data = {
-        "date": [today + timedelta(days=i) for i in range(num_days)],
-        "qty": [random.randint(0, 5) for _ in range(num_days)],
-    }
-
-    df = pd.DataFrame(data)
-
-    return df
+# def _predict(sku: str, start_date: date, end_date: date) -> pd.DataFrame:
+#     import random
+#     today = datetime.today().date()
+#
+#     num_days: int = (end_date - start_date).days + 1
+#
+#     data = {
+#         "date": [today + timedelta(days=i) for i in range(num_days)],
+#         "qty": [random.randint(0, 5) for _ in range(num_days)],
+#     }
+#
+#     df = pd.DataFrame(data)
+#
+#     return df
 
 
 def _get_deadline_order_date_and_quantity(
@@ -108,7 +110,7 @@ def _get_stock_development_list(prediction_df: pd.DataFrame, current_stock: int,
 def get_stock_development_forecast(article: Article, current_in_stock: int, min_stock: int, amount_forecast_members: int) -> OrderWithForecast:
     start_time = datetime.today().date()
     end_time = start_time + timedelta(days=90)
-    prediction_df = _predict(article.sku, start_time, end_time)
+    prediction_df = get_sku_forecast(article.sku, start_time, end_time)
 
     stock_development = _get_stock_development_list(
         prediction_df, current_in_stock, amount_forecast_members
